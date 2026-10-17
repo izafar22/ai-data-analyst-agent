@@ -43,13 +43,18 @@ class FoundationIntegrationTest {
 
     @Test
     void listsOnlySevenAuthorizedTablesWithoutRowData() throws Exception {
-        jdbc.execute("CREATE TABLE IF NOT EXISTS private_notes (secret text)");
-        mvc.perform(get("/api/v1/schema/tables")).andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(7)))
-            .andExpect(jsonPath("$[*].name", contains("categories", "customers", "order_items", "orders", "payments", "products", "refunds")))
-            .andExpect(content().string(not(containsString("example.test"))))
-            .andExpect(content().string(not(containsString("private_notes"))))
-            .andExpect(content().string(not(containsString("flyway_schema_history"))));
+        jdbc.execute("CREATE TABLE public.private_notes (secret text)");
+        try {
+            mvc.perform(get("/api/v1/schema/tables")).andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(7)))
+                .andExpect(jsonPath("$[*].name", contains("categories", "customers", "order_items", "orders", "payments", "products", "refunds")))
+                .andExpect(content().string(not(containsString("example.test"))))
+                .andExpect(content().string(not(containsString("private_notes"))))
+                .andExpect(content().string(not(containsString("flyway_schema_history"))));
+        } finally {
+            // Clean up even when an HTTP assertion fails; other tests share this container.
+            jdbc.execute("DROP TABLE IF EXISTS public.private_notes");
+        }
     }
 
     @Test
