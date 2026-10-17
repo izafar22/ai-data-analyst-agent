@@ -1,0 +1,3 @@
+# Diagnostic SQL endpoint is profile-gated and the entire HTTP server is loopback-only.
+server:
+  address: 127.0.0.1

@@ -4,6 +4,7 @@
   <groupId>com.example</groupId><artifactId>analyst</artifactId><version>0.0.1-SNAPSHOT</version>
   <properties><java.version>21</java.version></properties>
   <dependencies>
+    <dependency><groupId>com.github.jsqlparser</groupId><artifactId>jsqlparser</artifactId><version>5.4</version></dependency>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-web</artifactId></dependency>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-jdbc</artifactId></dependency>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-actuator</artifactId></dependency>
