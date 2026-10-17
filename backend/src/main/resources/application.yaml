@@ -1,4 +1,7 @@
 spring:
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
   application:
     name: ai-data-analyst
   datasource:
@@ -19,3 +22,10 @@ server:
   error:
     include-message: never
     include-stacktrace: never
+analytics:
+  username: analyst_readonly
+  password: ${ANALYTICS_PASSWORD}
+  pool-size: ${ANALYTICS_POOL_SIZE:3}
+  statement-timeout-ms: 2000
+  lock-timeout-ms: 500
+  max-response-bytes: 1048576

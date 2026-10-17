@@ -2,6 +2,8 @@ package com.example.analyst;
 
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +32,17 @@ class FoundationIntegrationTest {
         registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
         registry.add("spring.datasource.username", POSTGRES::getUsername);
         registry.add("spring.datasource.password", POSTGRES::getPassword);
+        registry.add("analytics.password", () -> DatabaseTestSupport.PASSWORD);
+    }
+
+    private static boolean provisioned;
+    @BeforeEach
+    void provision() throws Exception { if (!provisioned) { DatabaseTestSupport.provision(POSTGRES); provisioned=true; } }
+
+    @Test
+    void diagnosticEndpointIsDisabled() throws Exception {
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/v1/queries/execute")
+            .contentType("application/json").content("{\"sql\":\"SELECT 1\"}")).andExpect(status().isNotFound());
     }
 
     @Autowired MockMvc mvc;
